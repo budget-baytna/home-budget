@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f6f4ee">
+<title>ميزانية بيتنا</title>
+<style>
+:root{--bg:#f6f4ee;--card:#fffefa;--ink:#26352d;--muted:#7b857d;--green:#547b60;--green2:#e7efe6;--line:#e7e8df;--red:#b9544c;--shadow:0 8px 24px rgba(37,53,43,.06)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Tahoma,Arial,sans-serif;line-height:1.6}
+.wrap{max-width:980px;margin:auto;padding:24px 16px 48px}
+header{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:22px}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{width:48px;height:48px;border-radius:16px;background:var(--green2);display:grid;place-items:center;font-size:25px}
+h1{font-size:24px;margin:0;letter-spacing:-.5px}
+.subtitle{color:var(--muted);font-size:13px;margin-top:2px}
+.month{font-size:13px;color:var(--muted);background:#fffefa;border:1px solid var(--line);border-radius:999px;padding:8px 12px;white-space:nowrap}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:19px;box-shadow:var(--shadow)}
+.metric-label{font-size:13px;color:var(--muted);margin-bottom:8px}
+.metric{font-size:27px;font-weight:700;letter-spacing:-.5px}
+.metric small{font-size:13px;font-weight:400;color:var(--muted)}
+.metric-icon{float:left;font-size:20px}
+.main-card{margin-top:15px}
+.section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
+h2{font-size:17px;margin:0}
+.helper{font-size:12px;color:var(--muted)}
+.progress-track{height:10px;background:#edf0e9;border-radius:99px;overflow:hidden;margin:12px 0 8px}
+.progress-fill{height:100%;width:0;background:var(--green);border-radius:99px;transition:width .2s}
+.progress-caption{display:flex;justify-content:space-between;color:var(--muted);font-size:12px}
+.content-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:15px;margin-top:15px}
+label{display:block;font-size:13px;font-weight:700;margin-bottom:6px}
+input,select{font:inherit;width:100%;border:1px solid #dfe3d9;border-radius:12px;background:#fff;padding:11px 12px;color:var(--ink);outline:none}
+input:focus,select:focus{border-color:var(--green);box-shadow:0 0 0 3px #547b6018}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.field{margin-bottom:12px}
+button{font:inherit;cursor:pointer;border:0;border-radius:12px;padding:11px 15px;font-weight:700}
+.primary{background:var(--green);color:white;width:100%;margin-top:2px}
+.primary:hover{background:#42664d}
+.secondary{background:var(--green2);color:var(--green);font-size:12px;padding:8px 11px}
+.list{display:flex;flex-direction:column;gap:9px}
+.expense{display:flex;align-items:center;gap:11px;padding:11px 0;border-bottom:1px solid var(--line)}
+.expense:last-child{border-bottom:0}
+.exp-icon{width:40px;height:40px;display:grid;place-items:center;border-radius:13px;background:#f0f2ea;font-size:18px;flex-shrink:0}
+.exp-info{flex:1;min-width:0}
+.exp-title{font-size:14px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.exp-meta{font-size:11px;color:var(--muted)}
+.exp-amount{font-size:14px;font-weight:700;white-space:nowrap}
+.delete{background:transparent;color:var(--muted);font-size:17px;padding:5px 8px}
+.delete:hover{color:var(--red);background:#faeeec}
+.empty{padding:22px 8px;text-align:center;color:var(--muted);font-size:13px}
+.category-row{display:flex;align-items:center;gap:10px;margin:14px 0}
+.category-name{font-size:13px;min-width:78px}
+.category-track{height:7px;background:#edf0e9;border-radius:99px;overflow:hidden;flex:1}
+.category-fill{height:100%;background:#85a58a;border-radius:99px}
+.category-value{font-size:12px;color:var(--muted);min-width:74px;text-align:left}
+.notice{margin-top:16px;border-radius:14px;padding:12px 14px;background:#f5f0df;color:#78653a;font-size:12px}
+.footer{text-align:center;color:var(--muted);font-size:11px;margin-top:22px}
+@media(max-width:680px){.wrap{padding:18px 12px 32px}header{align-items:flex-start}.grid{grid-template-columns:1fr;gap:10px}.card{padding:16px}.metric{font-size:24px}.content-grid{grid-template-columns:1fr}.month{font-size:11px;padding:7px 9px}h1{font-size:21px}.form-row{gap:9px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <div class="logo">🏡</div>
+      <div><h1>ميزانية بيتنا</h1><div class="subtitle">خطوة بسيطة لراحة مالية أكبر</div></div>
+    </div>
+    <div class="month" id="monthLabel"></div>
+  </header>
+
+  <section class="grid">
+    <div class="card">
+      <div class="metric-icon">🎯</div><div class="metric-label">ميزانية الشهر</div>
+      <div class="metric" id="budgetMetric">0 <small>ر.س</small></div>
+    </div>
+    <div class="card">
+      <div class="metric-icon">🛍️</div><div class="metric-label">إجمالي المصروفات</div>
+      <div class="metric" id="spentMetric">0 <small>ر.س</small></div>
+    </div>
+    <div class="card">
+      <div class="metric-icon">🌿</div><div class="metric-label">المتبقي لكِ</div>
+      <div class="metric" id="remainingMetric">0 <small>ر.س</small></div>
+    </div>
+  </section>
+
+  <section class="card main-card">
+    <div class="section-head"><h2>تقدّم ميزانيتك</h2><span class="helper" id="percentLabel">0% مستخدم</span></div>
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-caption"><span id="progressLeft">ابدئي بتحديد ميزانيتك الشهرية</span><span id="progressRight"></span></div>
+  </section>
+
+  <div class="content-grid">
+    <section class="card">
+      <div class="section-head"><h2>➕ إضافة مصروف</h2><span class="helper">سريع وبسيط</span></div>
+      <div class="field"><label for="budgetInput">ميزانية الشهر (ريال)</label><input id="budgetInput" type="number" min="0" step="1" placeholder="مثال: 8000"></div>
+      <button class="secondary" id="saveBudget" style="margin-bottom:16px">حفظ الميزانية</button>
+      <div class="field"><label for="expenseName">اسم المصروف</label><input id="expenseName" type="text" maxlength="70" placeholder="مثال: مقاضي الأسبوع"></div>
+      <div class="form-row">
+        <div class="field"><label for="expenseAmount">المبلغ (ريال)</label><input id="expenseAmount" type="number" min="0.01" step="0.01" placeholder="150"></div>
+        <div class="field"><label for="expenseCategory">التصنيف</label>
+          <select id="expenseCategory">
+            <option value="المقاضي">🛒 المقاضي</option><option value="الفواتير">💡 الفواتير</option><option value="السكن">🏠 السكن</option><option value="المواصلات">🚗 المواصلات</option><option value="المطاعم">🍽️ المطاعم</option><option value="الأطفال والعائلة">🧸 الأطفال والعائلة</option><option value="الصحة">💊 الصحة</option><option value="التسوق الشخصي">🛍️ التسوق الشخصي</option><option value="الترفيه">🎈 الترفيه</option><option value="أخرى">📦 أخرى</option>
+          </select>
+        </div>
+      </div>
+      <div class="field"><label for="expenseDate">التاريخ</label><input id="expenseDate" type="date"></div>
+      <button class="primary" id="addExpense">إضافة المصروف</button>
+      <div id="formMessage" class="helper" style="margin-top:8px" aria-live="polite"></div>
+    </section>
+
+    <section class="card">
+      <div class="section-head"><h2>📊 أين تذهب مصروفاتك؟</h2></div>
+      <div id="categoryBreakdown"><div class="empty">أضيفي مصروفاتك ليظهر الملخص هنا.</div></div>
+    </section>
+  </div>
+
+  <section class="card main-card">
+    <div class="section-head"><h2>آخر المصروفات</h2><button class="secondary" id="clearExpenses">مسح المصروفات</button></div>
+    <div id="expenseList" class="list"><div class="empty">ما أضفتِ مصروفات حتى الآن 🌱</div></div>
+  </section>
+
+  <div class="notice" id="smartNotice">💡 نصيحة: حددي ميزانية الشهر، ثم سجلي مصروفاتك أولًا بأول حتى تعرفي كم بقي لكِ.</div>
+  <div class="footer">نسخة تجريبية مجانية • تُحفظ البيانات على هذا المتصفح فقط</div>
+</div>
+<script>
+const $ = id => document.getElementById(id);
+const KEY = 'budgetBaytnaPrototypeV1';
+const icons = {'المقاضي':'🛒','الفواتير':'💡','السكن':'🏠','المواصلات':'🚗','المطاعم':'🍽️','الأطفال والعائلة':'🧸','الصحة':'💊','التسوق الشخصي':'🛍️','الترفيه':'🎈','أخرى':'📦'};
+let state = {budget:0, expenses:[]};
+const today = new Date();
+$('monthLabel').textContent = new Intl.DateTimeFormat('ar-SA-u-ca-gregory',{month:'long',year:'numeric'}).format(today);
+$('expenseDate').value = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+function money(n){return new Intl.NumberFormat('en-US',{maximumFractionDigits:2}).format(n)+' ر.س';}
+function load(){try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&typeof s==='object'){state.budget=Number(s.budget)||0;state.expenses=Array.isArray(s.expenses)?s.expenses:[];}}catch(e){} $('budgetInput').value=state.budget||'';render();}
+function save(){localStorage.setItem(KEY,JSON.stringify(state));}
+function render(){
+ const spent=state.expenses.reduce((sum,e)=>sum+Number(e.amount||0),0), remaining=state.budget-spent, percent=state.budget>0?Math.min(100,spent/state.budget*100):0;
+ $('budgetMetric').innerHTML=money(state.budget)+'';
+ $('spentMetric').textContent=money(spent);
+ $('remainingMetric').textContent=money(remaining);
+ $('remainingMetric').style.color=remaining<0?'var(--red)':'var(--ink)';
+ $('percentLabel').textContent=(state.budget>0?Math.round(spent/state.budget*100):0)+'% مستخدم';
+ $('progressFill').style.width=percent+'%';
+ $('progressFill').style.background=remaining<0?'var(--red)':'var(--green)';
+ $('progressLeft').textContent=state.budget>0?(remaining<0?'تجاوزتِ الميزانية بمقدار '+money(Math.abs(remaining)):'باقي لكِ '+money(remaining)):'ابدئي بتحديد ميزانيتك الشهرية';
+ $('progressRight').textContent=state.budget>0?'من '+money(state.budget):'';
+ const sums={};state.expenses.forEach(e=>sums[e.category]=(sums[e.category]||0)+Number(e.amount||0));
+ const entries=Object.entries(sums).sort((a,b)=>b[1]-a[1]);
+ $('categoryBreakdown').innerHTML=entries.length?entries.map(([cat,val])=>`<div class="category-row"><div class="category-name">${icons[cat]||'📦'} ${escapeHtml(cat)}</div><div class="category-track"><div class="category-fill" style="width:${spent?Math.min(100,val/spent*100):0}%"></div></div><div class="category-value">${money(val)}</div></div>`).join(''):'<div class="empty">أضيفي مصروفاتك ليظهر الملخص هنا.</div>';
+ const sorted=[...state.expenses].sort((a,b)=>(b.date||'').localeCompare(a.date||'')||b.created-a.created);
+ $('expenseList').innerHTML=sorted.length?sorted.map(e=>`<div class="expense"><div class="exp-icon">${icons[e.category]||'📦'}</div><div class="exp-info"><div class="exp-title">${escapeHtml(e.name)}</div><div class="exp-meta">${escapeHtml(e.category)} • ${escapeHtml(e.date||'')}</div></div><div class="exp-amount">${money(Number(e.amount))}</div><button class="delete" title="حذف المصروف" aria-label="حذف المصروف" data-delete="${e.id}">×</button></div>`).join(''):'<div class="empty">ما أضفتِ مصروفات حتى الآن 🌱</div>';
+ $('smartNotice').textContent=state.budget<=0?'💡 نصيحة: حددي ميزانية الشهر، ثم سجلي مصروفاتك أولًا بأول حتى تعرفي كم بقي لكِ.':remaining<0?'⚠️ انتبهي: مصروفاتك تجاوزت ميزانية الشهر. راجعي التصنيفات لتعرفي أين زاد الصرف.':remaining<state.budget*.2?'🌿 تنبيه لطيف: استهلكتِ معظم الميزانية، حاولي ترتيب المصروفات المتبقية حسب الأولوية.':'🌿 ممتاز! ميزانيتك ضمن الحد المحدد حتى الآن. استمري بتسجيل المصروفات.';
+}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+$('saveBudget').addEventListener('click',()=>{const n=Number($('budgetInput').value);if(!Number.isFinite(n)||n<0){$('formMessage').textContent='أدخلي مبلغًا صحيحًا للميزانية.';return;}state.budget=n;save();render();$('formMessage').textContent='تم حفظ ميزانية الشهر.';});
+$('addExpense').addEventListener('click',()=>{const name=$('expenseName').value.trim(),amount=Number($('expenseAmount').value),category=$('expenseCategory').value,date=$('expenseDate').value;if(!name){$('formMessage').textContent='اكتبي اسم المصروف أولًا.';$('expenseName').focus();return;}if(!Number.isFinite(amount)||amount<=0){$('formMessage').textContent='أدخلي مبلغًا أكبر من صفر.';$('expenseAmount').focus();return;}state.expenses.push({id:Date.now().toString(36)+Math.random().toString(36).slice(2,7),name,amount,category,date,created:Date.now()});save();render();$('expenseName').value='';$('expenseAmount').value='';$('formMessage').textContent='تمت إضافة المصروف بنجاح 🌱';});
+$('expenseList').addEventListener('click',e=>{const b=e.target.closest('[data-delete]');if(!b)return;state.expenses=state.expenses.filter(x=>x.id!==b.dataset.delete);save();render();});
+$('clearExpenses').addEventListener('click',()=>{if(!state.expenses.length)return;if(confirm('متأكدة من مسح جميع المصروفات؟ لا يمكن التراجع عن هذه الخطوة.')){state.expenses=[];save();render();}});
+load();
+</script>
+</body>
+</html>
